@@ -2,8 +2,9 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const { name, phone, message } = req.body;
 
-    const TELEGRAM_BOT_TOKEN = "7775220900:AAGcIOUFqkqa_g0_majc_4QOhP-N_zDdl1U";
-    const TELEGRAM_CHAT_ID = "5507377846";
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
     const text = `New Form Submission:\n\nName: ${name}\nPhone: ${phone}\nMessage: ${message}`;
 
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
