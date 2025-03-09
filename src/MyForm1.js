@@ -37,7 +37,7 @@ const validationSchema = Yup.object({
     .min(0)
     .max(2)
     .required("Please enter number of children"),
-  message: Yup.string().required("Message is required"),
+
   additionalComments: Yup.string().max(
     500,
     "Comments cannot exceed 500 characters"
