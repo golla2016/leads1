@@ -53,7 +53,7 @@ const MyForm = () => {
       }}
     >
       <Typography variant="h5" gutterBottom>
-        Contact Form
+        Way to Go! Bravo!!
       </Typography>
       <Formik
         initialValues={initialValues}
