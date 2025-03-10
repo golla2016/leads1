@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    const text = `New Form Submission:\n\nName : ${name}\nPhone : ${phone}\nAvaialble on : ${contactMethod}\nEmail : ${email}\nCover Type : ${totalMembers}\nTotal_Members : ${totalMembers}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
+    const text = `New Form Submission:\n\nName : ${name}\nPhone : ${phone}\nAvaialble on : ${contactMethod}\nEmail : ${email}\nCover Type : ${coverType}\nTotal_Members : ${totalMembers}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
       ", "
     )}\nChild Ages: ${childAges.join(
       ", "
