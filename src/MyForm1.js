@@ -63,8 +63,8 @@ const MyForm1 = () => {
     pincode: "",
     totalMembers: "",
     coverType: "",
-    adults: "1",
-    children: "1",
+    adults: "",
+    children: "",
 
     additionalComments: "",
   };
