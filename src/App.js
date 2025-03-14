@@ -5,6 +5,7 @@ import MyForm1 from "./MyForm1";
 import AgentRegistration from "./AgentRegistration";
 import AgentLogin from "./AgentLogin";
 import AgentDashboard from "./AgentDashboard";
+import ForgotPassword from "./ForgotPassword";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/agent-registration" element={<AgentRegistration />} />
         <Route path="/agent-login" element={<AgentLogin />} />
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );

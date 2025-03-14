@@ -29,7 +29,7 @@ const validationSchema = Yup.object({
     .matches(/^\d{10}$/, "Mobile must be 10 digits")
     .required("Mobile number is required"),
   contactMethod: Yup.string().required("Select where the mobile is active"),
-  receiptMethod: Yup.string().required("Choose a preferred receipt method"),
+  //   receiptMethod: Yup.string().required("Choose a preferred receipt method"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
     .matches(/[A-Z]/, "Password must have at least one uppercase letter")
@@ -40,20 +40,20 @@ const validationSchema = Yup.object({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
-  upiId: Yup.string().when("receiptMethod", {
-    is: "UPI",
-    then: () =>
-      Yup.string()
-        .matches(/^[\w.-]+@[\w.-]+$/, "Enter a valid UPI ID")
-        .required("UPI ID is required"),
-  }),
-  bankAccount: Yup.string().when("receiptMethod", {
-    is: "Bank",
-    then: () =>
-      Yup.string()
-        .matches(/^\d{9,18}$/, "Enter a valid Bank Account number")
-        .required("Bank account number is required"),
-  }),
+  //   upiId: Yup.string().when("receiptMethod", {
+  //     is: "UPI",
+  //     then: () =>
+  //       Yup.string()
+  //         .matches(/^[\w.-]+@[\w.-]+$/, "Enter a valid UPI ID")
+  //         .required("UPI ID is required"),
+  //   }),
+  //   bankAccount: Yup.string().when("receiptMethod", {
+  //     is: "Bank",
+  //     then: () =>
+  //       Yup.string()
+  //         .matches(/^\d{9,18}$/, "Enter a valid Bank Account number")
+  //         .required("Bank account number is required"),
+  //   }),
   profilePicture: Yup.mixed().required("Profile picture is required"),
   secretQuestion: Yup.string().required("Please select a secret question"),
   secretAnswer: Yup.string().required("Secret answer is required"),
@@ -86,10 +86,10 @@ const AgentRegistration = () => {
       formData.append("surname", values.surname);
       formData.append("mobile", values.mobile);
       formData.append("contact_method", values.contactMethod);
-      formData.append("receipt_method", values.receiptMethod);
+      //   formData.append("receipt_method", values.receiptMethod);
       formData.append("password", values.password);
-      formData.append("secret_question", values.secretQuestion);
-      formData.append("secret_answer", values.secretAnswer);
+      formData.append("secretQuestion", values.secretQuestion);
+      formData.append("secretAnswer", values.secretAnswer);
 
       //   if (values.receiptMethod === "UPI") {
       //     formData.append("upi_id", values.upiId);
@@ -169,7 +169,7 @@ const AgentRegistration = () => {
           surname: "",
           mobile: "",
           contactMethod: "",
-          receiptMethod: "",
+          //   receiptMethod: "",
           //   upiId: "",
           //   bankAccount: "",
           profilePicture: null,

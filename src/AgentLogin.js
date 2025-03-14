@@ -1,9 +1,18 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import { Box, Button, TextField, Typography, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  IconButton,
+} from "@mui/material";
 import * as Yup from "yup";
 import axios from "axios";
+
+import HomeIcon from "@mui/icons-material/Home";
 
 const validationSchema = Yup.object({
   mobile: Yup.string()
@@ -46,8 +55,26 @@ const AgentLogin = () => {
     >
       <Paper
         elevation={6}
-        sx={{ padding: 4, width: "90%", maxWidth: 400, textAlign: "center" }}
+        sx={{
+          padding: 4,
+          width: "90%",
+          maxWidth: 400,
+          textAlign: "center",
+          position: "relative",
+        }}
       >
+        {/* Home Icon Button */}
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            p: 0.5,
+          }}
+          onClick={() => navigate("/")} // Navigate to Home Page
+        >
+          <HomeIcon fontSize="large" />
+        </IconButton>
         <Typography variant="h5" gutterBottom>
           Agent Login
         </Typography>
@@ -93,7 +120,8 @@ const AgentLogin = () => {
                 <Link
                   component="button"
                   variant="body2"
-                  onClick={() => navigate("/forgot-password")}
+                  to="/forgot-password"
+                  //   onClick={() => navigate("/forgot-password")}
                   sx={{
                     textDecoration: "none",
                     cursor: "pointer",
