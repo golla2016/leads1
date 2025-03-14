@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
 import * as Yup from "yup";
@@ -88,6 +88,21 @@ const AgentLogin = () => {
               >
                 Login
               </Button>
+              {/* Forgot Password Link */}
+              <Box sx={{ mt: 2 }}>
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => navigate("/forgot-password")}
+                  sx={{
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    color: "blue",
+                  }}
+                >
+                  Forgot Password?
+                </Link>
+              </Box>
             </Form>
           )}
         </Formik>

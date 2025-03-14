@@ -55,10 +55,18 @@ const validationSchema = Yup.object({
         .required("Bank account number is required"),
   }),
   profilePicture: Yup.mixed().required("Profile picture is required"),
+  secretQuestion: Yup.string().required("Please select a secret question"),
+  secretAnswer: Yup.string().required("Secret answer is required"),
 });
 
 const contactOptions = ["WhatsApp Only", "Telegram Only", "Both"];
-
+const secretQuestions = [
+  "What was your childhood nickname?",
+  "What is your mother's maiden name?",
+  "What was the name of your first pet?",
+  "What was your first car?",
+  "What is the name of your favorite teacher?",
+];
 const AgentRegistration = () => {
   const navigate = useNavigate(); // Initialize navigate function
   const [profileImage, setProfileImage] = useState(null);
@@ -80,14 +88,16 @@ const AgentRegistration = () => {
       formData.append("contact_method", values.contactMethod);
       formData.append("receipt_method", values.receiptMethod);
       formData.append("password", values.password);
+      formData.append("secret_question", values.secretQuestion);
+      formData.append("secret_answer", values.secretAnswer);
 
-      if (values.receiptMethod === "UPI") {
-        formData.append("upi_id", values.upiId);
-      }
-      if (values.receiptMethod === "Bank") {
-        formData.append("bank_account", values.bankAccount);
-        formData.append("ifsc_code", values.ifsccode);
-      }
+      //   if (values.receiptMethod === "UPI") {
+      //     formData.append("upi_id", values.upiId);
+      //   }
+      //   if (values.receiptMethod === "Bank") {
+      //     formData.append("bank_account", values.bankAccount);
+      //     formData.append("ifsc_code", values.ifsccode);
+      //   }
 
       if (values.agentId) {
         formData.append("agent", values.agentId); // Attach agent_id
@@ -160,12 +170,14 @@ const AgentRegistration = () => {
           mobile: "",
           contactMethod: "",
           receiptMethod: "",
-          upiId: "",
-          bankAccount: "",
+          //   upiId: "",
+          //   bankAccount: "",
           profilePicture: null,
-          ifsccode: "",
+          //   ifsccode: "",
           password: "",
           confirmPassword: "",
+          secretQuestion: "",
+          secretAnswer: "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -243,7 +255,7 @@ const AgentRegistration = () => {
             </Field>
 
             {/* Receipt Method (Radio Buttons) */}
-            <FormControl component="fieldset" margin="normal">
+            {/* <FormControl component="fieldset" margin="normal">
               <FormLabel component="legend">Preferred Receipt Method</FormLabel>
               <RadioGroup
                 row
@@ -258,7 +270,7 @@ const AgentRegistration = () => {
                   label="Bank Transfer"
                 />
               </RadioGroup>
-            </FormControl>
+            </FormControl> */}
 
             {/* Conditional Fields Based on Selection */}
             {values.receiptMethod === "UPI" && (
@@ -330,6 +342,37 @@ const AgentRegistration = () => {
               error={touched.confirmPassword && Boolean(errors.confirmPassword)}
               helperText={touched.confirmPassword && errors.confirmPassword}
             />
+            {/* Secret Question Dropdown */}
+            <Field
+              as={TextField}
+              fullWidth
+              select
+              name="secretQuestion"
+              label="Secret Question"
+              margin="normal"
+              variant="outlined"
+              error={touched.secretQuestion && Boolean(errors.secretQuestion)}
+              helperText={touched.secretQuestion && errors.secretQuestion}
+            >
+              {secretQuestions.map((question) => (
+                <MenuItem key={question} value={question}>
+                  {question}
+                </MenuItem>
+              ))}
+            </Field>
+
+            {/* Secret Answer Field */}
+            <Field
+              as={TextField}
+              fullWidth
+              name="secretAnswer"
+              label="Secret Answer"
+              margin="normal"
+              variant="outlined"
+              error={touched.secretAnswer && Boolean(errors.secretAnswer)}
+              helperText={touched.secretAnswer && errors.secretAnswer}
+            />
+
             {/* Profile Picture Upload */}
             <Box sx={{ textAlign: "center", mt: 2 }}>
               <Typography variant="body1">Upload Profile Picture</Typography>
