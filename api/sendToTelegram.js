@@ -2,27 +2,29 @@ export default async function handler(req, res) {
   console.log("Received request:", req.method, req.body); // ✅ Debugging log
   if (req.method === "POST") {
     const {
-      name,
+      first_name,
       phone,
       additionalComments,
       adultAges,
       childAges,
       adults,
       children,
-      contactMethod,
+      contact_method,
       email,
-      totalMembers,
-      coverType,
+      total_members,
+      cover_type,
+      unique_id,
+      agent_name,
     } = req.body;
 
     const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    const text = `New Form Submission:\n\nName : ${name}\nPhone : ${phone}\nAvaialble on : ${contactMethod}\nEmail : ${email}\nCover Type : ${coverType}\nTotal_Members : ${totalMembers}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
+    const text = `New Form Submission:\n\nName : ${first_name}\nPhone : ${phone}\nAvaialble on : ${contact_method}\nEmail : ${email}\nCover Type : ${cover_type}\nTotal_Members : ${total_members}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
       ", "
     )}\nChild Ages: ${childAges.join(
       ", "
-    )}\nAdditional_Comments : ${additionalComments}`;
+    )}\nAdditional_Comments : ${additionalComments}\nUnique ID:${unique_id}\nAgent Name : ${agent_name} `;
 
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 

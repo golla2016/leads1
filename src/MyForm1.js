@@ -1,37 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
   Box,
   Typography,
   MenuItem,
-  IconButton,
   Tooltip,
-  FormControl,
-  InputLabel,
-  Select,
+  Autocomplete,
+  IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import HomeIcon from "@mui/icons-material/Home";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
+  first_name: Yup.string().required("Name is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
   phone: Yup.string()
     .matches(/\d{10}/, "Phone must be 10 digits")
     .required("Phone number is required"),
-  contactMethod: Yup.string().required("Please select a contact method"),
+  contact_method: Yup.string().required("Please select a contact method"),
   pincode: Yup.string()
     .matches(/^\d{6}$/, "Pincode must be 6 digits")
     .required("Pincode is required"),
-  totalMembers: Yup.number()
+  total_members: Yup.number()
     .required("Please select total members")
     .min(1)
     .max(6),
-  coverType: Yup.string().required("Please select a cover type"),
+  cover_type: Yup.string().required("Please select a cover type"),
   adults: Yup.number().required("Please enter number of adults").min(1).max(6),
   children: Yup.number()
     .min(0)
@@ -55,47 +56,79 @@ const generateAgeOptions = (start, end) => {
   return options;
 };
 const MyForm1 = () => {
+  const navigate = useNavigate();
   const initialValues = {
-    name: "",
+    first_name: "",
     email: "",
     phone: "",
-    contactMethod: "",
+    contact_method: "",
     pincode: "",
-    totalMembers: "",
-    coverType: "",
+    total_members: "",
+    cover_type: "",
     adults: "",
     children: "",
-
+    agentId: "",
     additionalComments: "",
+    unique_id: "",
   };
   const [tooltipText, setTooltipText] = useState(
     "Select Individual for single coverage, Floater for family coverage"
   );
 
-  const [totalMembersOptions, setTotalMembersOptions] = useState([2, 3, 4]);
+  const [total_membersOptions, settotal_membersOptions] = useState([2, 3, 4]);
   const [adultsOptions, setadultsOptions] = useState([1, 2]);
   const contactOptions = ["WhatsApp Only", "Telegram Only", "Both"];
+  const [agents, setAgents] = useState([]);
+  const [filteredAgents, setFilteredAgents] = useState([]); // For search feature
+
+  // Generate Unique ID (First 4 letters of name + date)
+  const generateunique_id = (name) => {
+    if (!name) return "";
+    const shortName = name.slice(0, 4).toUpperCase();
+    const date = new Date().toISOString().split("T")[0].replace(/-/g, ""); // YYYYMMDD
+    return `${shortName}${date}`;
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/agents/")
+      .then((response) => {
+        console.log("Agents Data:", response.data);
+        setAgents(response.data); // ✅ Store agents correctly
+        setFilteredAgents(response.data); // ✅ Initialize filtered agents list
+      })
+      .catch((error) => console.error("Error fetching agents:", error));
+  }, []);
+
+  // Handle search filter in dropdown
+  const handleAgentSearch = (event, setFieldValue) => {
+    const searchValue = event.target.value.toLowerCase();
+    setFieldValue("agentId", searchValue);
+    setFilteredAgents(
+      agents.filter((id) => id.toLowerCase().includes(searchValue))
+    );
+  };
 
   const handleFieldChange = (event, setFieldValue, values) => {
     const { name, value } = event.target;
     setFieldValue(name, value);
 
-    if (name === "coverType") {
+    if (name === "cover_type") {
       setTooltipText(
         value === "Individual"
           ? "Individual covers only one person."
           : "Floater covers the entire family."
       );
-      setTotalMembersOptions(
+      settotal_membersOptions(
         value === "Individual" ? [1, 2, 3, 4, 5, 6] : [2, 3, 4]
       );
       setadultsOptions(value === "Individual" ? [1, 2, 3, 4, 5, 6] : [1, 2]);
-      setFieldValue("totalMembers", "");
+      setFieldValue("total_members", "");
       setFieldValue("adults", "");
     }
 
-    if (name === "totalMembers") {
-      if (values.coverType === "Individual") {
+    if (name === "total_members") {
+      if (values.cover_type === "Individual") {
         setFieldValue("adults", Number(value));
         setFieldValue("children", 0);
         console.log("adults", Number(value));
@@ -106,21 +139,21 @@ const MyForm1 = () => {
     }
 
     if (name === "adults") {
-      if (values.totalMembers === 2) {
+      if (values.total_members === 2) {
         if (value === 1) {
           setFieldValue("children", 1);
         } else {
           setFieldValue("children", 0);
         }
       }
-      if (values.totalMembers === 3) {
+      if (values.total_members === 3) {
         if (value === 1) {
           setFieldValue("children", 2);
         } else {
           setFieldValue("children", 1);
         }
       }
-      if (values.totalMembers === 4) {
+      if (values.total_members === 4) {
         if (value === 1) {
           setFieldValue("children", 3);
         } else {
@@ -138,8 +171,21 @@ const MyForm1 = () => {
     }
   };
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (
+    values,
+    { setSubmitting, resetForm, setFieldValue }
+  ) => {
     try {
+      const unique_id = generateunique_id(values.name);
+      await setFieldValue("unique_id", unique_id);
+
+      // ✅ Find the selected agent by ID
+
+      const selectedAgent = agents.find((agent) => agent.id === values.agentId);
+      const agentName = selectedAgent
+        ? `${selectedAgent.first_name} ${selectedAgent.surname}`
+        : "Unknown";
+
       // Extract adult ages
       const adultAges = [];
       for (let i = 0; i < Number(values.adults); i++) {
@@ -155,26 +201,45 @@ const MyForm1 = () => {
       // Create a structured payload
       const payload = {
         ...values,
+        unique_id,
         adultAges,
         childAges,
+        agent: values.agentId, // ✅ Assigning the agent ID as foreign key
+        agent_name: agentName,
       };
 
       console.log("Sending Data:", payload);
 
-      const response = await fetch("/api/sendToTelegram", {
+      /** ✅ 1️⃣ Send Data to Telegram */
+      const telegramResponse = await fetch("/api/sendToTelegram/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
-      console.log("Response:", result);
+      const telegramResult = await telegramResponse.json();
+      console.log("Telegram Response:", telegramResult);
 
-      if (result.success) {
-        alert("Details sent to Telegram successfully! ✅");
-        resetForm(); // Reset form after success
+      if (!telegramResult.success) {
+        throw new Error("Failed to send message to Telegram ❌");
+      }
+
+      /** ✅ 2️⃣ Post Data to Django Backend */
+      const backendResponse = await axios.post(
+        "http://127.0.0.1:8000/api/customer-forms/",
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("Backend Response:", backendResponse.data);
+
+      if (backendResponse.status === 201) {
+        alert("Data successfully sent to Telegram & Backend! ✅");
+        resetForm(); // ✅ Reset form after success
       } else {
-        alert("Failed to send message ❌");
+        throw new Error("Failed to post data to the backend ❌");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -193,8 +258,20 @@ const MyForm1 = () => {
         p: 3,
         boxShadow: 3,
         borderRadius: 2,
+        position: "relative",
       }}
     >
+      {/* Home Icon Button */}
+      <IconButton
+        sx={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+        }}
+        onClick={() => navigate("/")} // Navigate to Home Page
+      >
+        <HomeIcon fontSize="large" />
+      </IconButton>
       <Typography variant="h5" gutterBottom>
         Way to Go! Bravo!!
       </Typography>
@@ -203,15 +280,16 @@ const MyForm1 = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, setFieldValue, values }) => {
+        {({ errors, touched, setFieldValue, values, handleChange }) => {
           const isChildrenDisabled =
-            values.coverType === "Floater" || values.coverType === "Individual";
+            values.cover_type === "Floater" ||
+            values.cover_type === "Individual";
           return (
             <Form>
               <Field
                 as={TextField}
                 fullWidth
-                name="name"
+                name="first_name"
                 label="Name"
                 margin="normal"
                 variant="outlined"
@@ -242,14 +320,14 @@ const MyForm1 = () => {
                 as={TextField}
                 select
                 fullWidth
-                name="contactMethod"
+                name="contact_method"
                 label="The Contact number is active on"
                 margin="normal"
                 variant="outlined"
-                error={touched.contactMethod && Boolean(errors.contactMethod)}
-                helperText={touched.contactMethod && errors.contactMethod}
+                error={touched.contact_method && Boolean(errors.contact_method)}
+                helperText={touched.contact_method && errors.contact_method}
                 onChange={(e) => handleFieldChange(e, setFieldValue, values)}
-                value={values.contactMethod}
+                value={values.contact_method}
               >
                 {contactOptions.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -273,7 +351,7 @@ const MyForm1 = () => {
                   as={TextField}
                   fullWidth
                   select
-                  name="coverType"
+                  name="cover_type"
                   label="Cover Type"
                   margin="normal"
                   variant="outlined"
@@ -295,13 +373,14 @@ const MyForm1 = () => {
                 as={TextField}
                 fullWidth
                 select
-                name="totalMembers"
+                name="total_members"
                 label="Total Members"
                 margin="normal"
                 variant="outlined"
                 onChange={(e) => handleFieldChange(e, setFieldValue, values)}
+                disabled={!values.cover_type} // ✅ Disabled until cover_type is selected
               >
-                {totalMembersOptions.map((num) => (
+                {total_membersOptions.map((num) => (
                   <MenuItem key={num} value={num}>
                     {num}
                   </MenuItem>
@@ -322,7 +401,7 @@ const MyForm1 = () => {
                 margin="normal"
                 variant="outlined"
                 onChange={(e) => handleFieldChange(e, setFieldValue, values)}
-                disabled={values.coverType === "Individual"} // Disable condition
+                disabled={values.cover_type === "Individual"} // Disable condition
               >
                 {adultsOptions.map((num) => (
                   <MenuItem key={num} value={num}>
@@ -381,6 +460,36 @@ const MyForm1 = () => {
                 </Field>
               ))}
 
+              <Autocomplete
+                options={filteredAgents} // ✅ Use filtered list for search
+                getOptionLabel={(option) =>
+                  `${option.first_name} ${option.surname}`
+                } // ✅ Show agent name
+                value={
+                  agents.find((agent) => agent.id === values.agentId) || null
+                } // ✅ Match selected agent by ID
+                onChange={(event, newValue) => {
+                  setFieldValue("agentId", newValue ? newValue.id : ""); // ✅ Store only the ID
+                }}
+                onInputChange={(event, inputValue) => {
+                  // ✅ Search Functionality: Filter agent names dynamically
+                  setFilteredAgents(
+                    agents.filter((agent) =>
+                      `${agent.first_name} ${agent.surname}`
+                        .toLowerCase()
+                        .includes(inputValue.toLowerCase())
+                    )
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Agent ID"
+                    margin="normal"
+                    fullWidth
+                  />
+                )}
+              />
               <Field
                 as={TextField}
                 fullWidth
