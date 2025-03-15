@@ -41,7 +41,7 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/agents/")
+      .get("https://insurance-biz.onrender.com/api/agents/")
       .then((response) => {
         console.log("Agents Data:", response.data);
         setAgentData(response.data); // ✅ Store agents correctly
