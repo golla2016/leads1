@@ -226,7 +226,7 @@ const MyForm1 = () => {
 
       /** ✅ 2️⃣ Post Data to Django Backend */
       const backendResponse = await axios.post(
-        "http://127.0.0.1:8000/api/customer-forms/",
+        "https://insurance-biz.onrender.com/api/customer-forms/",
         payload,
         {
           headers: { "Content-Type": "application/json" },
@@ -236,7 +236,9 @@ const MyForm1 = () => {
       console.log("Backend Response:", backendResponse.data);
 
       if (backendResponse.status === 201) {
-        alert("Data successfully sent to Telegram & Backend! ✅");
+        alert(
+          "Congratulations !! Your form is submitted. Our team will revert with Best Plan soon. Woo Hoo !! ✅"
+        );
         resetForm(); // ✅ Reset form after success
       } else {
         throw new Error("Failed to post data to the backend ❌");

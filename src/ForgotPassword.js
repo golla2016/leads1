@@ -78,7 +78,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/update-password/",
+        "https://insurance-biz.onrender.com/api/update-password/",
         values
       );
       if (response.status == 200) {

@@ -30,7 +30,7 @@ const AgentDashboard = () => {
     }
 
     axios
-      .get(`http://127.0.0.1:8000/api/agents-business/${agentId}/`)
+      .get(`https://insurance-biz.onrender.com/api/agents-business/${agentId}/`)
       .then((response) => {
         setAgentDetails(response.data);
       })

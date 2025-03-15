@@ -54,7 +54,7 @@ const validationSchema = Yup.object({
   //         .matches(/^\d{9,18}$/, "Enter a valid Bank Account number")
   //         .required("Bank account number is required"),
   //   }),
-  profilePicture: Yup.mixed().required("Profile picture is required"),
+  profile_picture: Yup.mixed().required("Profile picture is required"),
   secretQuestion: Yup.string().required("Please select a secret question"),
   secretAnswer: Yup.string().required("Secret answer is required"),
 });
@@ -75,7 +75,7 @@ const AgentRegistration = () => {
     const file = event.currentTarget.files[0];
     if (file) {
       setProfileImage(URL.createObjectURL(file)); // Preview the image
-      setFieldValue("profilePicture", file);
+      setFieldValue("profile_picture", file);
     }
   };
 
@@ -103,10 +103,10 @@ const AgentRegistration = () => {
         formData.append("agent", values.agentId); // Attach agent_id
       }
 
-      if (values.profilePicture) {
-        formData.append("profile_picture", values.profilePicture);
+      if (values.profile_picture) {
+        formData.append("profile_picture", values.profile_picture);
       }
-
+      // values.profile_picture
       const response = await axios.post(
         "https://insurance-biz.onrender.com/api/agents/",
         formData,
@@ -172,7 +172,7 @@ const AgentRegistration = () => {
           //   receiptMethod: "",
           //   upiId: "",
           //   bankAccount: "",
-          profilePicture: null,
+          profile_picture: null,
           //   ifsccode: "",
           password: "",
           confirmPassword: "",
