@@ -103,9 +103,9 @@ const AgentRegistration = () => {
         formData.append("agent", values.agentId); // Attach agent_id
       }
 
-      //   if (values.profilePicture) {
-      //     formData.append("profile_picture", values.profilePicture);
-      //   }
+      if (values.profilePicture) {
+        formData.append("profile_picture", values.profilePicture);
+      }
 
       const response = await axios.post(
         "https://insurance-biz.onrender.com/api/agents/",
