@@ -17,7 +17,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
-  first_name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
