@@ -58,7 +58,7 @@ const generateAgeOptions = (start, end) => {
 const MyForm1 = () => {
   const navigate = useNavigate();
   const initialValues = {
-    first_name: "",
+    name: "",
     email: "",
     phone: "",
     contact_method: "",
@@ -221,7 +221,9 @@ const MyForm1 = () => {
       console.log("Telegram Response:", telegramResult);
 
       if (!telegramResult.success) {
-        throw new Error("Failed to send message to Telegram ❌");
+        console.error("Telegram API Error:", telegramResult);
+        alert("Error sending message to Telegram ❌");
+        return;
       }
 
       /** ✅ 2️⃣ Post Data to Django Backend */
@@ -236,7 +238,12 @@ const MyForm1 = () => {
       console.log("Backend Response:", backendResponse.data);
 
       if (backendResponse.status === 201) {
+        console.log(backendResponse);
+
         alert(
+          "Congratulations !! Your form is submitted. Our team will revert with Best Plan soon. Woo Hoo !! ✅"
+        );
+        console.log(
           "Congratulations !! Your form is submitted. Our team will revert with Best Plan soon. Woo Hoo !! ✅"
         );
         resetForm(); // ✅ Reset form after success
@@ -245,6 +252,7 @@ const MyForm1 = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+
       alert("Error sending details ❌");
     } finally {
       setSubmitting(false);
