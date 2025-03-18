@@ -176,6 +176,7 @@ const MyForm1 = () => {
     { setSubmitting, resetForm, setFieldValue }
   ) => {
     try {
+      console.log("Form Values at Submission:", values); // ✅ Debugging step
       const unique_id = generateunique_id(values.name);
       await setFieldValue("unique_id", unique_id);
 
