@@ -106,46 +106,68 @@ const AgentRegistration = () => {
       if (values.profile_picture) {
         formData.append("profile_picture", values.profile_picture);
       }
-      // values.profile_picture
-      const response = await axios.post(
-        "https://insurance-biz.onrender.com/api/agents/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const telegramPayload = {
+        type: "Agent",
+        first_name: values.first_name,
+        sur_name: values.sur_name,
+        phone: values.mobile,
+        contact_method: values.contactMethod,
+      };
+      const telegramResponse = await fetch("/api/sendToTelegram/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(telegramPayload),
+      });
 
-      console.log("Response:", response.data);
+      const telegramResult = await telegramResponse.json();
+      console.log("Telegram Response:", telegramResult);
 
-      if (response.status === 201) {
-        alert("User Registered Successfully! ✅");
-        const telegramPayload = {
-          type: "Agent",
-          first_name: values.first_name,
-          sur_name: values.sur_name,
-          phone: values.mobile,
-          contact_method: values.contactMethod,
-        };
-        const telegramResponse = await fetch("/api/sendToTelegram/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(telegramPayload),
-        });
-
-        const telegramResult = await telegramResponse.json();
-        console.log("Telegram Response:", telegramResult);
-
-        if (!telegramResult.success) {
-          console.error("Telegram API Error:", telegramResult);
-          alert("Error sending message to Telegram ❌");
-          return;
-        }
-        resetForm();
-      } else {
-        alert("Failed to register user ❌");
+      if (!telegramResult.success) {
+        console.error("Telegram API Error:", telegramResult);
+        alert("Error sending message to Telegram ❌");
+        return;
       }
+      resetForm();
+      // values.profile_picture
+      // const response = await axios.post(
+      //   "https://insurance-biz.onrender.com/api/agents/",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+
+      // console.log("Response:", response.data);
+
+      // if (response.status === 201) {
+      //   alert("User Registered Successfully! ✅");
+      //   const telegramPayload = {
+      //     type: "Agent",
+      //     first_name: values.first_name,
+      //     sur_name: values.sur_name,
+      //     phone: values.mobile,
+      //     contact_method: values.contactMethod,
+      //   };
+      //   const telegramResponse = await fetch("/api/sendToTelegram/", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(telegramPayload),
+      //   });
+
+      //   const telegramResult = await telegramResponse.json();
+      //   console.log("Telegram Response:", telegramResult);
+
+      //   if (!telegramResult.success) {
+      //     console.error("Telegram API Error:", telegramResult);
+      //     alert("Error sending message to Telegram ❌");
+      //     return;
+      //   }
+      //   resetForm();
+      // } else {
+      //   alert("Failed to register user ❌");
+      // }
     } catch (error) {
       console.error("Error:", error);
       alert("Error submitting form ❌");
