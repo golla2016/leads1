@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
     // 👇 decide heading based on type
     const heading =
-      type === "agent" ? "New Agent Registration" : "New Form Submission";
+      type === "Agent" ? "New Agent Registration" : "New Form Submission";
     const text = `${heading}:\n\nName : ${first_name}\nSurname : ${sur_name}\nPhone : ${phone}\nAvaialble on : ${contact_method}\nEmail : ${email}\nCover Type : ${cover_type}\nTotal_Members : ${total_members}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
       ", "
     )}\nChild Ages: ${childAges.join(
