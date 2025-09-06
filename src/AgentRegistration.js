@@ -24,7 +24,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const validationSchema = Yup.object({
   first_name: Yup.string().required("First name is required"),
-  surname: Yup.string().required("Surname is required"),
+  sur_name: Yup.string().required("Surname is required"),
   mobile: Yup.string()
     .matches(/^\d{10}$/, "Mobile must be 10 digits")
     .required("Mobile number is required"),
@@ -83,7 +83,7 @@ const AgentRegistration = () => {
     try {
       const formData = new FormData();
       formData.append("first_name", values.first_name);
-      formData.append("surname", values.surname);
+      formData.append("surname", values.sur_name);
       formData.append("mobile", values.mobile);
       formData.append("contact_method", values.contactMethod);
       //   formData.append("receipt_method", values.receiptMethod);
@@ -121,6 +121,26 @@ const AgentRegistration = () => {
 
       if (response.status === 201) {
         alert("User Registered Successfully! ✅");
+        const telegramPayload = {
+          first_name: values.first_name,
+          sur_name: values.sur_name,
+          mobile: values.mobile,
+          contact_method: values.contactMethod,
+        };
+        const telegramResponse = await fetch("/api/sendToTelegram/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(telegramPayload),
+        });
+
+        const telegramResult = await telegramResponse.json();
+        console.log("Telegram Response:", telegramResult);
+
+        if (!telegramResult.success) {
+          console.error("Telegram API Error:", telegramResult);
+          alert("Error sending message to Telegram ❌");
+          return;
+        }
         resetForm();
       } else {
         alert("Failed to register user ❌");
@@ -132,9 +152,11 @@ const AgentRegistration = () => {
       console.log("Submitted Data:", values);
       alert("Form Submitted Successfully!");
       setSubmitting(false);
+
       resetForm();
       setProfileImage(null);
     }
+    /** ✅ 1️⃣ Send Data to Telegram */
   };
 
   return (
@@ -166,7 +188,7 @@ const AgentRegistration = () => {
       <Formik
         initialValues={{
           first_name: "",
-          surname: "",
+          sur_name: "",
           mobile: "",
           contactMethod: "",
           //   receiptMethod: "",
@@ -215,12 +237,12 @@ const AgentRegistration = () => {
             <Field
               as={TextField}
               fullWidth
-              name="surname"
+              name="sur_name"
               label="Surname"
               margin="normal"
               variant="outlined"
-              error={touched.surname && Boolean(errors.surname)}
-              helperText={touched.surname && errors.surname}
+              error={touched.sur_name && Boolean(errors.sur_name)}
+              helperText={touched.sur_name && errors.sur_name}
             />
 
             {/* Mobile Number */}
