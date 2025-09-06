@@ -58,7 +58,8 @@ const generateAgeOptions = (start, end) => {
 const MyForm1 = () => {
   const navigate = useNavigate();
   const initialValues = {
-    name: "",
+    first_name: "",
+    sur_name:"",
     email: "",
     phone: "",
     contact_method: "",
@@ -300,8 +301,18 @@ const MyForm1 = () => {
               <Field
                 as={TextField}
                 fullWidth
-                name="name"
-                label="Name"
+                name="fist_name"
+                label="Firstname"
+                margin="normal"
+                variant="outlined"
+                error={touched.name && Boolean(errors.name)}
+                helperText={touched.name && errors.name}
+              />
+                <Field
+                as={TextField}
+                fullWidth
+                name="sur_name"
+                label="Surname"
                 margin="normal"
                 variant="outlined"
                 error={touched.name && Boolean(errors.name)}
