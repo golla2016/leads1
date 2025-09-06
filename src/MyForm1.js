@@ -93,7 +93,7 @@ const MyForm1 = () => {
 
   useEffect(() => {
     axios
-      .get("https://insurance-biz.onrender.com/api/agents/")
+      .get("https://insurance-biz.onrender.com/api/get-agents/")
       .then((response) => {
         console.log("Agents Data:", response.data);
         setAgents(response.data); // ✅ Store agents correctly
