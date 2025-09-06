@@ -124,7 +124,7 @@ const AgentRegistration = () => {
         const telegramPayload = {
           first_name: values.first_name,
           sur_name: values.sur_name,
-          mobile: values.mobile,
+          phone: values.mobile,
           contact_method: values.contactMethod,
         };
         const telegramResponse = await fetch("/api/sendToTelegram/", {
