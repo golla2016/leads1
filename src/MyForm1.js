@@ -302,7 +302,7 @@ const MyForm1 = () => {
               <Field
                 as={TextField}
                 fullWidth
-                name="fist_name"
+                name="first_name"
                 label="Firstname"
                 margin="normal"
                 variant="outlined"
