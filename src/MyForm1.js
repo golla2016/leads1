@@ -306,8 +306,8 @@ const MyForm1 = () => {
                 label="Firstname"
                 margin="normal"
                 variant="outlined"
-                error={touched.name && Boolean(errors.name)}
-                helperText={touched.name && errors.name}
+                error={touched.first_name && Boolean(errors.first_name)}
+                helperText={touched.first_name && errors.first_name}
               />
                 <Field
                 as={TextField}
@@ -316,8 +316,8 @@ const MyForm1 = () => {
                 label="Surname"
                 margin="normal"
                 variant="outlined"
-                error={touched.name && Boolean(errors.name)}
-                helperText={touched.name && errors.name}
+                error={touched.sur_name && Boolean(errors.sur_name)}
+                helperText={touched.sur_name && errors.sur_name}
               />
               <Field
                 as={TextField}
