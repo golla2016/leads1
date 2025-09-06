@@ -122,6 +122,7 @@ const AgentRegistration = () => {
       if (response.status === 201) {
         alert("User Registered Successfully! ✅");
         const telegramPayload = {
+          type: "Agent",
           first_name: values.first_name,
           sur_name: values.sur_name,
           phone: values.mobile,
