@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const {
       first_name,
+      sur_name,
       phone,
       additionalComments,
       adultAges,
@@ -20,7 +21,7 @@ export default async function handler(req, res) {
     const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    const text = `New Form Submission:\n\nName : ${first_name}\nPhone : ${phone}\nAvaialble on : ${contact_method}\nEmail : ${email}\nCover Type : ${cover_type}\nTotal_Members : ${total_members}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
+    const text = `New Form Submission:\n\nName : ${first_name}\nSurname : ${sur_name}\nPhone : ${phone}\nAvaialble on : ${contact_method}\nEmail : ${email}\nCover Type : ${cover_type}\nTotal_Members : ${total_members}\nNumber of Adults : ${adults}\nNumber of Children : ${children}\nAdult Ages : ${adultAges.join(
       ", "
     )}\nChild Ages: ${childAges.join(
       ", "
