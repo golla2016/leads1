@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   first_name: Yup.string().required("First Name is required"),
-  sur_name: Yup.string().required("Sur Name is required"),
+  sur_name: Yup.string().required("SurName is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
