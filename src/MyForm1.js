@@ -113,13 +113,13 @@ const MyForm1 = () => {
   // }, []);
 
   // Handle search filter in dropdown
-  const handleAgentSearch = (event, setFieldValue) => {
-    const searchValue = event.target.value.toLowerCase();
-    setFieldValue("agentId", searchValue);
-    setFilteredAgents(
-      agents.filter((id) => id.toLowerCase().includes(searchValue))
-    );
-  };
+  // const handleAgentSearch = (event, setFieldValue) => {
+  //   const searchValue = event.target.value.toLowerCase();
+  //   setFieldValue("agentId", searchValue);
+  //   setFilteredAgents(
+  //     agents.filter((id) => id.toLowerCase().includes(searchValue))
+  //   );
+  // };
 
   const handleFieldChange = (event, setFieldValue, values) => {
     const { name, value } = event.target;
