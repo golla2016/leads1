@@ -149,7 +149,7 @@ const AgentRegistration = () => {
         contact_method: values.contactMethod,
         secret_question: values.secretQuestion,
         secret_answer: values.secretAnswer,
-        unique_ID: values.unique_id,
+        unique_ID: unique_id,
       };
       const telegramResponse = await fetch("/api/sendToTelegram/", {
         method: "POST",
