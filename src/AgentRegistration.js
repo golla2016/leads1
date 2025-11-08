@@ -4,10 +4,10 @@ import {
   MenuItem,
   Button,
   Radio,
-  RadioGroup,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
+  // RadioGroup,
+  // FormControl,
+  // FormControlLabel,
+  // FormLabel,
   Box,
   Typography,
   Avatar,
@@ -18,9 +18,35 @@ import { Formik, Form, Field } from "formik";
 import HomeIcon from "@mui/icons-material/Home";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+const generateUniqueId = (mobile) => {
+  if (!mobile || mobile.length < 3) return "";
+
+  const last3 = mobile.slice(-3); // last 3 digits of mobile
+  const now = new Date();
+
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // current month
+  const day = String(now.getDate()).padStart(2, "0"); // current date
+
+  // combine month and day (e.g., March 7 → "0307")
+  const datePart = `${month}${day}`;
+
+  // now we have 3 (mobile) + 4 (date) = 7 digits total already
+  // if you want a bit of randomness instead of full determinism,
+  // replace one digit with a random one
+
+  const randomDigit = Math.floor(Math.random() * 10); // 0-9
+  let id = `${last3}${datePart}`;
+
+  // replace one digit randomly for extra uniqueness
+  const pos = Math.floor(Math.random() * id.length);
+  id = id.substring(0, pos) + randomDigit + id.substring(pos + 1);
+
+  return id;
+};
 
 const validationSchema = Yup.object({
   first_name: Yup.string().required("First name is required"),
@@ -79,7 +105,10 @@ const AgentRegistration = () => {
     }
   };
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (
+    values,
+    { setSubmitting, resetForm, setFieldValue }
+  ) => {
     try {
       const formData = new FormData();
       formData.append("first_name", values.first_name);
@@ -223,6 +252,7 @@ const AgentRegistration = () => {
           confirmPassword: "",
           secretQuestion: "",
           secretAnswer: "",
+          unique_id: "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
