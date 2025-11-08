@@ -137,7 +137,7 @@ const AgentRegistration = () => {
       }
 
       const unique_id = generateUniqueId(values.mobile);
-      await setFieldValue("unique_id", unique_id);
+      setFieldValue("unique_id", unique_id);
 
       formData.append("unique_id", unique_id);
 
