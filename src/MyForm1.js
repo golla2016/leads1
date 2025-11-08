@@ -17,7 +17,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
+  first_name: Yup.string().required("First Name is required"),
+  sur_name: Yup.string().required("Sur Name is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
@@ -58,7 +59,8 @@ const generateAgeOptions = (start, end) => {
 const MyForm1 = () => {
   const navigate = useNavigate();
   const initialValues = {
-    name: "",
+    first_name: "",
+    sur_name: "",
     email: "",
     phone: "",
     contact_method: "",
@@ -90,15 +92,25 @@ const MyForm1 = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://insurance-biz.onrender.com/api/agents/")
-      .then((response) => {
-        console.log("Agents Data:", response.data);
-        setAgents(response.data); // ✅ Store agents correctly
-        setFilteredAgents(response.data); // ✅ Initialize filtered agents list
+    fetch("http://localhost:5000/api/get-agents/") // or your deployed backend URL
+      .then((res) => res.json())
+      .then((data) => {
+        setAgents(data);
+        setFilteredAgents(data);
       })
-      .catch((error) => console.error("Error fetching agents:", error));
+      .catch((err) => console.error("Error fetching agents:", err));
   }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("https://insurance-biz.onrender.com/api/agents/")
+  //     .then((response) => {
+  //       console.log("Agents Data:", response.data);
+  //       setAgents(response.data); // ✅ Store agents correctly
+  //       setFilteredAgents(response.data); // ✅ Initialize filtered agents list
+  //     })
+  //     .catch((error) => console.error("Error fetching agents:", error));
+  // }, []);
 
   // Handle search filter in dropdown
   const handleAgentSearch = (event, setFieldValue) => {
@@ -177,7 +189,7 @@ const MyForm1 = () => {
   ) => {
     try {
       console.log("Form Values at Submission:", values); // ✅ Debugging step
-      const unique_id = generateunique_id(values.name);
+      const unique_id = generateunique_id(values.first_name);
       await setFieldValue("unique_id", unique_id);
 
       // ✅ Find the selected agent by ID
@@ -300,8 +312,18 @@ const MyForm1 = () => {
               <Field
                 as={TextField}
                 fullWidth
-                name="name"
-                label="Name"
+                name="first_name"
+                label="Firstname"
+                margin="normal"
+                variant="outlined"
+                error={touched.name && Boolean(errors.name)}
+                helperText={touched.name && errors.name}
+              />
+              <Field
+                as={TextField}
+                fullWidth
+                name="sur_name"
+                label="Surname"
                 margin="normal"
                 variant="outlined"
                 error={touched.name && Boolean(errors.name)}

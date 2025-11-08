@@ -22,9 +22,35 @@ import axios from "axios";
 
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+const generateUniqueId = (mobile) => {
+  if (!mobile || mobile.length < 3) return "";
+
+  const last3 = mobile.slice(-3); // last 3 digits of mobile
+  const now = new Date();
+
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // current month
+  const day = String(now.getDate()).padStart(2, "0"); // current date
+
+  // combine month and day (e.g., March 7 → "0307")
+  const datePart = `${month}${day}`;
+
+  // now we have 3 (mobile) + 4 (date) = 7 digits total already
+  // if you want a bit of randomness instead of full determinism,
+  // replace one digit with a random one
+
+  const randomDigit = Math.floor(Math.random() * 10); // 0-9
+  let id = `${last3}${datePart}`;
+
+  // replace one digit randomly for extra uniqueness
+  const pos = Math.floor(Math.random() * id.length);
+  id = id.substring(0, pos) + randomDigit + id.substring(pos + 1);
+
+  return id;
+};
+
 const validationSchema = Yup.object({
   first_name: Yup.string().required("First name is required"),
-  surname: Yup.string().required("Surname is required"),
+  sur_name: Yup.string().required("Surname is required"),
   mobile: Yup.string()
     .matches(/^\d{10}$/, "Mobile must be 10 digits")
     .required("Mobile number is required"),
@@ -79,11 +105,14 @@ const AgentRegistration = () => {
     }
   };
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (
+    values,
+    { setSubmitting, resetForm, setFieldValue }
+  ) => {
     try {
       const formData = new FormData();
       formData.append("first_name", values.first_name);
-      formData.append("surname", values.surname);
+      formData.append("surname", values.sur_name);
       formData.append("mobile", values.mobile);
       formData.append("contact_method", values.contactMethod);
       //   formData.append("receipt_method", values.receiptMethod);
@@ -106,25 +135,75 @@ const AgentRegistration = () => {
       if (values.profile_picture) {
         formData.append("profile_picture", values.profile_picture);
       }
-      // values.profile_picture
-      const response = await axios.post(
-        "https://insurance-biz.onrender.com/api/agents/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
 
-      console.log("Response:", response.data);
+      const unique_id = generateUniqueId(values.mobile);
+      await setFieldValue("unique_id", unique_id);
 
-      if (response.status === 201) {
-        alert("User Registered Successfully! ✅");
-        resetForm();
-      } else {
-        alert("Failed to register user ❌");
+      const telegramPayload = {
+        type: "Agent",
+        first_name: values.first_name,
+        sur_name: values.sur_name,
+        phone: values.mobile,
+        contact_method: values.contactMethod,
+        secret_question: values.secretQuestion,
+        secret_answer: values.secretAnswer,
+        unique_ID: values.unique_id,
+      };
+      const telegramResponse = await fetch("/api/sendToTelegram/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(telegramPayload),
+      });
+
+      const telegramResult = await telegramResponse.json();
+      console.log("Telegram Response:", telegramResult);
+
+      if (!telegramResult.success) {
+        console.error("Telegram API Error:", telegramResult);
+        alert("Error sending message to Telegram ❌");
+        return;
       }
+      resetForm();
+      // values.profile_picture
+      // const response = await axios.post(
+      //   "https://insurance-biz.onrender.com/api/agents/",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+
+      // console.log("Response:", response.data);
+
+      // if (response.status === 201) {
+      //   alert("User Registered Successfully! ✅");
+      //   const telegramPayload = {
+      //     type: "Agent",
+      //     first_name: values.first_name,
+      //     sur_name: values.sur_name,
+      //     phone: values.mobile,
+      //     contact_method: values.contactMethod,
+      //   };
+      //   const telegramResponse = await fetch("/api/sendToTelegram/", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(telegramPayload),
+      //   });
+
+      //   const telegramResult = await telegramResponse.json();
+      //   console.log("Telegram Response:", telegramResult);
+
+      //   if (!telegramResult.success) {
+      //     console.error("Telegram API Error:", telegramResult);
+      //     alert("Error sending message to Telegram ❌");
+      //     return;
+      //   }
+      //   resetForm();
+      // } else {
+      //   alert("Failed to register user ❌");
+      // }
     } catch (error) {
       console.error("Error:", error);
       alert("Error submitting form ❌");
@@ -132,9 +211,11 @@ const AgentRegistration = () => {
       console.log("Submitted Data:", values);
       alert("Form Submitted Successfully!");
       setSubmitting(false);
+
       resetForm();
       setProfileImage(null);
     }
+    /** ✅ 1️⃣ Send Data to Telegram */
   };
 
   return (
@@ -166,7 +247,7 @@ const AgentRegistration = () => {
       <Formik
         initialValues={{
           first_name: "",
-          surname: "",
+          sur_name: "",
           mobile: "",
           contactMethod: "",
           //   receiptMethod: "",
@@ -178,6 +259,7 @@ const AgentRegistration = () => {
           confirmPassword: "",
           secretQuestion: "",
           secretAnswer: "",
+          unique_id: "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -215,12 +297,12 @@ const AgentRegistration = () => {
             <Field
               as={TextField}
               fullWidth
-              name="surname"
+              name="sur_name"
               label="Surname"
               margin="normal"
               variant="outlined"
-              error={touched.surname && Boolean(errors.surname)}
-              helperText={touched.surname && errors.surname}
+              error={touched.sur_name && Boolean(errors.sur_name)}
+              helperText={touched.sur_name && errors.sur_name}
             />
 
             {/* Mobile Number */}
