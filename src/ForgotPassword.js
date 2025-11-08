@@ -81,7 +81,7 @@ const ForgotPassword = () => {
         "https://insurance-biz.onrender.com/api/update-password/",
         values
       );
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Password updated successfully");
       }
       resetForm();
