@@ -329,26 +329,7 @@ const MyForm1 = () => {
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
               />
-              <Field
-                as={TextField}
-                fullWidth
-                name="sur_name"
-                label="Surname"
-                margin="normal"
-                variant="outlined"
-                error={touched.first_name && Boolean(errors.first_name)}
-                helperText={touched.first_name && errors.first_name}
-              />
-              <Field
-                as={TextField}
-                fullWidth
-                name="sur_name"
-                label="Surname"
-                margin="normal"
-                variant="outlined"
-                error={touched.sur_name && Boolean(errors.sur_name)}
-                helperText={touched.sur_name && errors.sur_name}
-              />
+
               <Field
                 as={TextField}
                 fullWidth
