@@ -218,7 +218,7 @@ const MyForm1 = () => {
         adultAges,
         childAges,
         // agent: values.agentId, // ✅ Assigning the agent ID as foreign key
-        agent_name: agentName,
+        // agent_name: agentName,
       };
 
       console.log("Sending Data:", payload);
