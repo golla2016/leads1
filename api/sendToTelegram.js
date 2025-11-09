@@ -16,7 +16,8 @@ export default async function handler(req, res) {
       total_members,
       cover_type,
       unique_id,
-      agent_name,
+      // agent_name,
+      agentID,
       secret_question,
       secret_answer,
       unique_ID,
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
       ", "
     )}\nAdditional_Comments : ${additionalComments || ""}\nUnique ID:${
       unique_id || ""
-    }\nAgent Name : ${agent_name || ""}`;
+    }\nAgent ID : ${agentID || ""}`;
 
     const agent_text = `${heading}:\n\nName : ${first_name || ""}\nSurname : ${
       sur_name || ""

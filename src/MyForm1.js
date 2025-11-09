@@ -194,10 +194,10 @@ const MyForm1 = () => {
 
       // ✅ Find the selected agent by ID
 
-      const selectedAgent = agents.find((agent) => agent.id === values.agentId);
-      const agentName = selectedAgent
-        ? `${selectedAgent.first_name} ${selectedAgent.surname}`
-        : "Unknown";
+      // const selectedAgent = agents.find((agent) => agent.id === values.agentId);
+      // const agentName = selectedAgent
+      //   ? `${selectedAgent.first_name} ${selectedAgent.surname}`
+      //   : "Unknown";
 
       // Extract adult ages
       const adultAges = [];
@@ -217,7 +217,7 @@ const MyForm1 = () => {
         unique_id,
         adultAges,
         childAges,
-        agent: values.agentId, // ✅ Assigning the agent ID as foreign key
+        // agent: values.agentId, // ✅ Assigning the agent ID as foreign key
         agent_name: agentName,
       };
 
@@ -494,7 +494,7 @@ const MyForm1 = () => {
                 </Field>
               ))}
 
-              <Autocomplete
+              {/* <Autocomplete
                 options={filteredAgents} // ✅ Use filtered list for search
                 getOptionLabel={(option) =>
                   `${option.first_name} ${option.surname}`
@@ -523,6 +523,16 @@ const MyForm1 = () => {
                     fullWidth
                   />
                 )}
+              /> */}
+              <Field
+                as={TextField}
+                fullWidth
+                name="agentID"
+                label="Referral Code/ID"
+                margin="normal"
+                variant="outlined"
+                // error={touched.name && Boolean(errors.name)}
+                // helperText={touched.name && errors.name}
               />
               <Field
                 as={TextField}
